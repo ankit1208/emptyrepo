@@ -1,0 +1,85 @@
+create or replace view patient_bill as
+select patient.pid,bill.doctorcost,bill.medicalcost,bill.roomcharge from patient 
+natural join bill;
+
+select * from patient_bill;
+
+create or replace PROCEDURE billpro(patientid in int)
+is 
+totalcost int;
+BEGIN
+select doctorcost+medicalcost+roomcharge into totalcost from patient_bill where patientid=pid;
+dbms_output.put_line('totalcost: ' || totalcost); 
+END;
+
+
+exec billpro(1230);
+
+
+
+
+
+create or replace PROCEDURE patient_record(patientid in int)
+is 
+recordid int;
+problem varchar(50);
+pid int;
+BEGIN
+select medicalrecord_problem.problem,patient.pid into problem,pid from medicalrecord_problem natural join medicalrecord natural join patient where patientid=pid;
+dbms_output.put_line('patientid: ' || pid); 
+dbms_output.put_line('problem: ' || problem); 
+END;
+
+exec patient_record(1230);
+
+
+
+
+
+
+
+CREATE OR REPLACE FUNCTION total_doctor
+RETURN number IS  
+total number(2) := 0;  
+BEGIN  
+SELECT count(*) into total  
+FROM doctor;
+RETURN total;  
+END;
+
+
+DECLARE  
+d_num number(2);  
+BEGIN  
+d_num := total_doctor();  
+dbms_output.put_line('Total doctors: ' || d_num);  
+END;  
+
+
+
+
+
+
+create or replace view patient_hospital_view as
+select patient.pid,patient.fname,patient.lname,hospital.hname,hospital.hospitalid from patient 
+inner join admitted on patient.pid=admitted.pid 
+inner join hospital on hospital.hospitalid=admitted.hospitalid;
+
+select * from patient_hospital_view;
+
+CREATE OR REPLACE FUNCTION patient_hospital(patientid in int)
+RETURN string IS  
+hname1 varchar(60);
+hospitalid1 number :=0;
+pid1 int;
+BEGIN  
+select pid,hospitalid,hname into pid1,hospitalid1,hname1 from patient_hospital_view where pid=patientid;
+return hname1;
+END;  
+
+DECLARE  
+hname varchar(30);  
+BEGIN  
+hname := patient_hospital(1230);  
+dbms_output.put_line('patient in hospital: ' || hname);  
+END;  

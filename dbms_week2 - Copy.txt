@@ -1,0 +1,90 @@
+select * from patient;
+select * from doctor;
+select * from medicalrecord;
+select * from medicalrecord_problem;
+select * from patient_phonenumber;
+select * from attendedby;
+select * from bill;
+select * from hospital;
+select * from admitted;
+
+
+select pid, p_address, lname ,recordid from patient;
+select doctorid,dname from doctor;
+select dateofadmission , numberofdays from admitted;
+select problem from medicalrecord_problem;
+
+
+select * from admitted where dateofadmission = '7-mar-2021';
+select * from admitted where numberofdays>5;
+select * from bill where roomcharge>30000;
+
+
+select * from doctor where qualification='MBBS' and years_of_exp>4;
+select * from bill where doctorcost>50000 and medicalcost>70000;
+
+select doctorid,dname from doctor where qualification='MBBS'or qualification='MD';
+
+select (doctorcost+medicalcost+roomcharge) as totalcost from bill where billid=3;
+
+select * from doctor where not qualification='Dental';
+select * from medicalrecord where not recordid='1493';
+select * from medicalrecord_problem where not problem ='covid';
+
+select distinct * from doctor;
+
+select * from bill order by doctorcost asc;
+
+select * from patient order by pid desc;
+
+select * from patient where lname like 's%';
+select * from patient where fname like 'a%';
+select * from doctor where dname like '%n';
+select * from medicalrecord_problem where problem like 'l%';
+
+
+select fname from patient 
+union 
+select Dname from doctor;
+
+
+select dateofexamination from  medicalrecord
+intersect
+select dateofadmission from admitted;
+
+select avg(doctorcost+medicalcost+roomcharge) as averagetotalcost from bill;
+select min(doctorcost+medicalcost+roomcharge) as mintotalcost from bill;
+select max(doctorcost+medicalcost+roomcharge) as maxtotalcost from bill;
+select sum(doctorcost) from bill;
+
+select count(*) as totaldoctors from doctor;
+select count(*) as totalpatients from patient;
+
+SELECT COUNT(doctorID) , qualification
+FROM doctor
+group by qualification;
+
+SELECT COUNT(doctorID) , qualification
+FROM doctor
+group by qualification
+having count(doctorid)>1;
+
+
+ SELECT * FROM patient
+ where recordid in (select recordid from medicalrecord_problem);
+
+
+
+select * from attendedby where dateofexam between '5-mar-2021' and '10-mar-2021';
+
+ SELECT * FROM patient
+ where recordid=any (select recordid from medicalrecord_problem
+ where problem='Cancer');
+ 
+ SELECT * FROM patient
+ where billid=all (select billid from bill);
+ 
+select * from admitted where dateofadmission is not null;
+
+insert into doctor values('D16','',3,'DR raj malhotra');
+select * FROM doctor where qualification is null;

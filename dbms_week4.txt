@@ -1,0 +1,50 @@
+SELECT * FROM patient
+ where recordid in (select recordid from medicalrecord_problem);
+
+select * from doctor where doctorid not in (select doctorid from attendedby
+where doctor.doctorid=attendedby.doctorid);
+
+SELECT * FROM patient
+ where recordid=any (select recordid from medicalrecord_problem
+ where problem='Cancer');
+
+select * from doctor where doctorid =any(select doctorid from attendedby where pid=all(select pid from patient where lname='shah'));
+
+select pid,fname,lname,billid from patient where exists
+(select billid from bill
+where doctorcost>80000 and bill.billid=patient.billid);
+
+
+select * from doctor where not exists (select doctorid from attendedby
+where doctor.doctorid=attendedby.doctorid);
+
+
+
+select pid,fname,lname from patient outer where pid=(select pid from admitted where dateofadmission between '5-mar-2021' and '10-mar-2021' and pid=outer.pid );
+
+select pid,lname,fname from patient where recordid=(SELECT recordid
+FROM medicalrecord outer
+WHERE recordid =(SELECT recordid
+                     FROM medicalrecord_problem
+                     WHERE recordid = 
+                               outer.recordid and problem='covid'));
+
+
+
+
+SELECT doctor.DOCTORID,doctor.Dname,patient.PID,patient.lname,patient.fname 
+FROM   doctor
+ full outer join attendedby
+ on doctor.doctorid=attendedby.doctorid
+ full outer join patient
+ on attendedby.pid=patient.pid;
+
+
+select patient.fname,patient.lname,hospital.hname from patient inner join admitted on patient.pid=admitted.pid inner join hospital on hospital.hospitalid=admitted.hospitalid;
+
+
+select distinct hospital.hospitalid,hospital.hname,doctor.doctorid,doctor.dname from hospital inner join admitted on hospital.hospitalid =admitted.hospitalid inner join patient on patient.pid=admitted.pid inner join attendedby on patient.pid=attendedby.pid inner join doctor on doctor.doctorid=attendedby.doctorid;
+
+
+
+select distinct doctor.doctorid,doctor.dname, patient.pid,patient.fname,patient.lname,bill.doctorcost from doctor inner join attendedby on doctor.doctorid=attendedby.doctorid inner join patient on patient.pid=attendedby.pid inner join bill on bill.billid=patient.billid;

@@ -1,0 +1,86 @@
+
+natural:
+
+SELECT PID,FNAME,LNAME ,phonenumber
+FROM patient
+NATURAL JOIN patient_phonenumber;
+
+SELECT *
+FROM attendedby
+NATURAL JOIN doctor;
+
+
+inner:
+
+select medicalrecord.recordid ,medicalrecord.dateofexamination,medicalrecord_problem.problem
+from medicalrecord
+inner join medicalrecord_problem
+on medicalrecord.recordid=medicalrecord_problem.recordid;
+
+SELECT *
+FROM admitted
+inner join hospital
+on admitted.hospitalid=hospital.hospitalid;
+
+
+cross:
+
+SELECT DOCTORID,Dname,PID,lname,fname 
+FROM   doctor
+ CROSS JOIN patient
+ where qualification='MBBS';
+
+
+SELECT *
+FROM  patient
+ CROSS JOIN hospital;
+
+left:
+
+SELECT patient.pid,patient.lname,patient.fname,patient.recordid,patient_phonenumber.phonenumber
+FROM patient
+LEFT JOIN patient_phonenumber
+ON patient.pid = patient_phonenumber.pid
+order by pid;
+
+
+select * from 
+medicalrecord left join medicalrecord_problem
+on medicalrecord.recordid = medicalrecord_problem.recordid;
+
+right
+
+SELECT *
+FROM patient
+right JOIN bill
+ON patient.billid = bill.billid;
+
+
+select medicalrecord.dateofexamination ,medicalrecord.recordid,patient.pid,patient.lname from 
+medicalrecord right join patient
+on medicalrecord.recordid = patient.recordid;
+
+
+self
+
+SELECT *
+FROM admitted a1, admitted a2
+WHERE a1.dateofadmission<>a2.dateofadmission;
+
+SELECT *
+FROM doctor d1, doctor d2
+WHERE d1.qualification<>d2.qualification and d1.years_of_exp>10;
+
+
+full outer:
+
+SELECT doctor.DOCTORID,doctor.Dname,patient.PID,patient.lname,patient.fname 
+FROM   doctor
+ full outer join patient
+ on doctor.doctorid=patient.lname;
+
+
+SELECT hospitalid,hname,patient.PID,patient.lname,patient.fname,patient.p_address
+FROM   patient
+ full outer join hospital
+ on patient.pid=hospital.hospitalid;

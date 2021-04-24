@@ -1,0 +1,100 @@
+create view mbbs_doctor as
+select * from doctor where 
+qualification='MBBS';
+
+create view patient_hospital as
+select patient.fname,patient.lname,hospital.hname from patient 
+inner join admitted on patient.pid=admitted.pid 
+inner join hospital on hospital.hospitalid=admitted.hospitalid;
+
+
+select * from mbbs_doctor;
+
+select * from patient_hospital;
+
+
+
+
+
+
+
+
+
+
+CREATE OR REPLACE TRIGGER bill_trigger 
+BEFORE  INSERT or update ON bill 
+FOR  each row
+declare 
+raise_in_sal int;
+
+begin
+raise_in_sal := :new.doctorcost - :old.doctorcost;
+ 
+ dbms_output.put_line('old salary: ' || :old.doctorcost); 
+  dbms_output.put_line('new salary: ' || :new.doctorcost); 
+  dbms_output.put_line('raise in salary: ' || raise_in_sal);
+  
+end;
+
+update bill
+set doctorcost=doctorcost+1000
+where billid=1;
+
+
+
+
+
+create table new_doctor_trigger(
+new_name varchar(100),
+new_doctorid varchar(5)
+);
+
+
+CREATE OR REPLACE TRIGGER doctor_trigger 
+BEFORE  INSERT or update ON doctor 
+FOR  each row
+begin
+insert into new_doctor_trigger values (:new.dname,:new.doctorid);
+dbms_output.put_line('doctorid: ' || :new.doctorid);
+dbms_output.put_line('doctorname: ' || :new.dname);
+dbms_output.put_line('qualification: ' || :new.Qualification);
+end;
+
+insert into doctor values('D16','frcs',12,'DR Palavi desai');
+ select * from new_doctor_trigger;
+ 
+ delete from doctor where doctorid='D16';
+ 
+ delete from new_doctor_trigger;
+ 
+ drop table new_doctor_trigger;
+
+
+
+
+
+
+
+create or replace trigger patient_hospital_tr
+before insert or update on admitted
+for each row
+begin
+dbms_output.put_line('hospital id 1000 ambani hospital');
+dbms_output.put_line('hospital id 2000 leela hospital');
+dbms_output.put_line('old hospital: ' || :old.hospitalid);
+dbms_output.put_line('new hospital: ' || :new.hospitalid);
+end;
+
+
+
+update (select admitted.pid, admitted.hospitalid,patient.fname,patient.lname,hospital.hname from patient 
+inner join admitted on patient.pid=admitted.pid 
+inner join hospital on hospital.hospitalid=admitted.hospitalid)
+set hospitalid=2000
+where pid=1230;
+
+select admitted.pid, admitted.hospitalid,patient.fname,patient.lname,hospital.hname from patient 
+inner join admitted on patient.pid=admitted.pid 
+inner join hospital on hospital.hospitalid=admitted.hospitalid
+
+select hospital.hname from admitted natural join hospital;

@@ -141,7 +141,7 @@ insert into patient values(1233, 'paramount apartments, ghatkoper','mukesh','meh
 insert into patient values(1235, 'bharat building, jogeshwari','azad','choudhary',1497,5);
 insert into patient values(1236, 'raj bhavan, bandra','Diya','Rana',1326,4);
 insert into patient values(1237, 'Sanskriti tower , andheri','kaifu','khan',1509,2);
-insert into patient values(1238, 'Dheeraj tower , juhu','kailash','thakur',1510,3);
+insert into patient values(1238, 'Dheeraj tower , juhu','kailash','shah',1510,3);
 
 insert into patient values(1239, 'raheja apartments , parle','arnav','gupta',1511,10);
 insert into patient values(1240, 'vrindavan tower , juhu','aayush','mehta',1512,11);
